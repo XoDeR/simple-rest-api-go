@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/XoDeR/simple-rest-api-go/pkg/handlers"
 	"github.com/gorilla/mux" // routing
 )
 
