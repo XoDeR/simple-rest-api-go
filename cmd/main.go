@@ -7,7 +7,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/XoDeR/simple-rest-api-go/pkg/handlers"
+	myHandlers "github.com/XoDeR/simple-rest-api-go/pkg/handlers"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux" // routing
 )
 
@@ -25,14 +26,20 @@ func run() error {
 		json.NewEncoder(w).Encode("BookSeller API")
 	})
 
-	router.HandleFunc("/books", handlers.GetAllBooks).Methods(http.MethodGet)
-	router.HandleFunc("/books", handlers.AddBook).Methods(http.MethodPost)
-	router.HandleFunc("/books/{id}", handlers.GetBook).Methods(http.MethodGet)
-	router.HandleFunc("/books/{id}", handlers.UpdateBook).Methods(http.MethodPut)
-	router.HandleFunc("/books/{id}", handlers.DeleteBook).Methods(http.MethodDelete)
+	router.HandleFunc("/books", myHandlers.GetAllBooks).Methods(http.MethodGet)
+	router.HandleFunc("/books", myHandlers.AddBook).Methods(http.MethodPost)
+	router.HandleFunc("/books/{id}", myHandlers.GetBook).Methods(http.MethodGet)
+	router.HandleFunc("/books/{id}", myHandlers.UpdateBook).Methods(http.MethodPut)
+	router.HandleFunc("/books/{id}", myHandlers.DeleteBook).Methods(http.MethodDelete)
+
+	corsHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{"http://localhost:5173"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"}),
+		handlers.AllowedHeaders([]string{"Content-Type"}),
+	)
 
 	log.Println("API server is running!")
-	http.ListenAndServe(":4000", router)
+	http.ListenAndServe(":4000", corsHandler(router))
 
 	return nil
 }
