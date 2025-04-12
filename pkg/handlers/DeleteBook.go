@@ -2,10 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
-	"github.com/XoDeR/simple-rest-api-go/pkg/mocks"
+	"github.com/XoDeR/simple-rest-api-go/pkg/models"
 	"github.com/gorilla/mux"
 )
 
@@ -13,15 +14,15 @@ func (h handlerWithDb) DeleteBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 
-	for index, book := range mocks.Books {
-		if book.Id == id {
-			// delete the book at index
-			mocks.Books = append(mocks.Books[:index], mocks.Books[index+1:]...)
+	var book models.Book
 
-			w.Header().Add("Content-Type", "application/json")
-			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode("Deleted")
-			break
-		}
+	if result := h.DB.First(&book, id); result.Error != nil {
+		fmt.Println(result.Error)
 	}
+
+	h.DB.Delete(&book)
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("Deleted")
 }

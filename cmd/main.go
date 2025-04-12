@@ -22,7 +22,6 @@ func main() {
 
 func run() error {
 	DB := db.Init()
-	log.Println(DB) // just to be able to compile when DB is not used
 	h := myHandlers.New(DB)
 
 	router := mux.NewRouter()

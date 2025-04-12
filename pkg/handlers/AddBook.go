@@ -2,12 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net/http"
 
-	"github.com/XoDeR/simple-rest-api-go/pkg/mocks"
 	"github.com/XoDeR/simple-rest-api-go/pkg/models"
 )
 
@@ -22,8 +21,9 @@ func (h handlerWithDb) AddBook(w http.ResponseWriter, r *http.Request) {
 	var book models.Book
 	json.Unmarshal(body, &book)
 
-	book.Id = rand.Intn(100)
-	mocks.Books = append(mocks.Books, book)
+	if result := h.DB.Create(&book); result.Error != nil {
+		fmt.Println(result.Error)
+	}
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated) // 201

@@ -2,10 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
-	"github.com/XoDeR/simple-rest-api-go/pkg/mocks"
+	"github.com/XoDeR/simple-rest-api-go/pkg/models"
 	"github.com/gorilla/mux"
 )
 
@@ -13,13 +14,13 @@ func (h handlerWithDb) GetBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 
-	for _, book := range mocks.Books {
-		if book.Id == id {
-			w.Header().Add("Content-Type", "application/json")
-			w.WriteHeader(http.StatusOK)
+	var book models.Book
 
-			json.NewEncoder(w).Encode(book)
-			break
-		}
+	if result := h.DB.First(&book, id); result.Error != nil {
+		fmt.Println(result.Error)
 	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(book)
 }

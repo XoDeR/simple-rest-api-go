@@ -9,6 +9,7 @@ import (
 )
 
 func Init() *gorm.DB {
+	// TODO: move to env var
 	dbURL := "postgres://postgres@localhost:5432/go-crud-01"
 
 	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
