@@ -12,7 +12,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func UpdateBook(w http.ResponseWriter, r *http.Request) {
+func (h handlerWithDb) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 

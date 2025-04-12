@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/XoDeR/simple-rest-api-go/pkg/db"
 	myHandlers "github.com/XoDeR/simple-rest-api-go/pkg/handlers"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux" // routing
@@ -20,17 +21,21 @@ func main() {
 }
 
 func run() error {
+	DB := db.Init()
+	log.Println(DB) // just to be able to compile when DB is not used
+	h := myHandlers.New(DB)
+
 	router := mux.NewRouter()
 
 	router.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode("BookSeller API")
 	})
 
-	router.HandleFunc("/books", myHandlers.GetAllBooks).Methods(http.MethodGet)
-	router.HandleFunc("/books", myHandlers.AddBook).Methods(http.MethodPost)
-	router.HandleFunc("/books/{id}", myHandlers.GetBook).Methods(http.MethodGet)
-	router.HandleFunc("/books/{id}", myHandlers.UpdateBook).Methods(http.MethodPut)
-	router.HandleFunc("/books/{id}", myHandlers.DeleteBook).Methods(http.MethodDelete)
+	router.HandleFunc("/books", h.GetAllBooks).Methods(http.MethodGet)
+	router.HandleFunc("/books", h.AddBook).Methods(http.MethodPost)
+	router.HandleFunc("/books/{id}", h.GetBook).Methods(http.MethodGet)
+	router.HandleFunc("/books/{id}", h.UpdateBook).Methods(http.MethodPut)
+	router.HandleFunc("/books/{id}", h.DeleteBook).Methods(http.MethodDelete)
 
 	corsHandler := handlers.CORS(
 		handlers.AllowedOrigins([]string{"http://localhost:5173"}),

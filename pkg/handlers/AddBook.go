@@ -11,7 +11,7 @@ import (
 	"github.com/XoDeR/simple-rest-api-go/pkg/models"
 )
 
-func AddBook(w http.ResponseWriter, r *http.Request) {
+func (h handlerWithDb) AddBook(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	body, err := ioutil.ReadAll(r.Body)
 

@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func DeleteBook(w http.ResponseWriter, r *http.Request) {
+func (h handlerWithDb) DeleteBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 

@@ -4,3 +4,7 @@ install gorm and postgres driver:
 
 $ go get -u gorm.io/gorm
 $ go get -u gorm.io/driver/postgres
+
+run server
+
+$ go run cmd/main.go
